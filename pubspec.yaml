@@ -1,6 +1,6 @@
 name: pseudo_keyboard
-description: A new flutter package project.
-version: 0.0.1
+description: widget to simulate keyboard UI. not a real keyboard.
+version: 0.0.1-beta1
 author:
 homepage:
 
