@@ -35,9 +35,14 @@ import 'package:pseudo_keyboard/pseudo_keyboard.dart';
                 child: new Text("Main Body")
               )
             ),
-            new KeyboardWidget(onPress: (int keyCode, bool isShift) {
-              debugPrint("keyPress {code: $keyCode, shift: $isShift}");
-            })
+            new KeyboardWidget(
+              onPress: (int keyCode, bool isShift) {
+                debugPrint("keyPressUp {code: $keyCode, shift: $isShift}");
+              },
+              onPressDown: (int keyCode, bool isShift) {
+                debugPrint("keyPressDown {code: $keyCode, shift: $isShift}");
+              },
+            )
           ],
         ),
       ),
