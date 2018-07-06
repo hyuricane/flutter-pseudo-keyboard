@@ -1,9 +1,9 @@
 library pseudo_keyboard;
 
 import 'package:flutter/material.dart';
+import 'package:pseudo_keyboard/widgets/custom_ink_well.dart';
 
 enum KeyboardState { DEFAULT, SHIFT, CAPSLOCK, SYMBOLS }
-
 
 const keyboardKeypadding = const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0);
 
@@ -13,15 +13,13 @@ class KeyboardKeyWidget extends StatelessWidget {
   final String text;
   final Icon icon;
   final int flex;
-  final void Function(int keyCode, bool shift) onKeyUp;
+  final void Function(int keyCode, bool shift, bool canceled) onKeyUp;
   final void Function(int keyCode, bool shift) onKeyDown;
-
 
   final IconThemeData iconTheme = new IconThemeData();
 
   KeyboardKeyWidget({@required this.keyCode, this.text, this.icon, @required this.onKeyUp, @required this.onKeyDown, this.flex = 1, this.shift = false});
 
-  
   @override
   Widget build(BuildContext context) {
     ButtonThemeData buttonTheme = ButtonTheme.of(context);
@@ -44,7 +42,8 @@ class KeyboardKeyWidget extends StatelessWidget {
                   child: InkWell(
                     onTap: () => this.onPressedUp(),
                     onTapDown: (detail) => this.onPressedDown(),
-                    onLongPress: () => this.onLongPress(),
+                    onTapCancel: () => this.onPressCancel(),
+                    // onLongPress: () => this.onLongPress(),
                     child: IconTheme.merge(
                         data: iconTheme,
                         child: Container(
@@ -90,29 +89,25 @@ class KeyboardKeyWidget extends StatelessWidget {
     // }
   }
 
-  var isLongPress = false;
-
   void onPressedDown() {
     this.onKeyDown(keyCode, shift);
   }
 
   void onPressedUp() {
-    if (!isLongPress) {
-      this.onKeyUp(keyCode, shift);
-    }
+    this.onKeyUp(keyCode, shift, false);
   }
 
-  void onLongPress() {
-    isLongPress = true;
+  void onPressCancel() {
+    this.onKeyUp(keyCode, shift, true);
   }
 }
 
 class KeyboardWidget extends StatefulWidget {
   final KeyboardState keyboardState;
-  final Function(int keyCode, bool isShift) onPress;
-  final Function(int keyCode, bool isShift) onPressDown;
+  final Function(int keyCode, bool isShift, bool canceled) onKeyUp;
+  final Function(int keyCode, bool isShift) onKeyDown;
 
-  KeyboardWidget({this.keyboardState = KeyboardState.DEFAULT, this.onPress, this.onPressDown});
+  KeyboardWidget({this.keyboardState = KeyboardState.DEFAULT, this.onKeyUp, this.onKeyDown});
 
   @override
   State<StatefulWidget> createState() {
@@ -369,7 +364,7 @@ class _KeyboardState extends State<KeyboardWidget> {
   }
 
   void onKeyPressDown(int keyCode, bool shift) {
-    if (widget.onPressDown != null) widget.onPressDown(keyCode, shift);
+    if (widget.onKeyDown != null) widget.onKeyDown(keyCode, shift);
     if (keyboardState == KeyboardState.SHIFT) {
       setState(() {
         keyboardState = KeyboardState.DEFAULT;
@@ -377,42 +372,48 @@ class _KeyboardState extends State<KeyboardWidget> {
     }
   }
 
-  void keyPress(int keyCode, bool shift) {
-    if (widget.onPress != null) widget.onPress(keyCode, shift);
-    if (keyboardState == KeyboardState.SHIFT) {
-      setState(() {
-        keyboardState = KeyboardState.DEFAULT;
-      });
+  void keyPress(int keyCode, bool shift, bool canceled) {
+    if (widget.onKeyUp != null) widget.onKeyUp(keyCode, shift, canceled);
+    if (!canceled) {
+      if (keyboardState == KeyboardState.SHIFT) {
+        setState(() {
+          keyboardState = KeyboardState.DEFAULT;
+        });
+      }
     }
   }
 
-  void shiftPress(int keyCode, bool shift) {
-    if (widget.onPress != null) widget.onPress(keyCode, keyboardState == KeyboardState.SHIFT || keyboardState == KeyboardState.CAPSLOCK);
-    if (keyboardState == KeyboardState.DEFAULT) {
-      setState(() {
-        keyboardState = KeyboardState.SHIFT;
-      });
-    } else if (keyboardState == KeyboardState.SHIFT) {
-      setState(() {
-        keyboardState = KeyboardState.CAPSLOCK;
-      });
-    } else if (keyboardState == KeyboardState.CAPSLOCK) {
-      setState(() {
-        keyboardState = KeyboardState.DEFAULT;
-      });
+  void shiftPress(int keyCode, bool shift, bool canceled) {
+    if (widget.onKeyUp != null) widget.onKeyUp(keyCode, keyboardState == KeyboardState.SHIFT || keyboardState == KeyboardState.CAPSLOCK, canceled);
+    if (!canceled) {
+      if (keyboardState == KeyboardState.DEFAULT) {
+        setState(() {
+          keyboardState = KeyboardState.SHIFT;
+        });
+      } else if (keyboardState == KeyboardState.SHIFT) {
+        setState(() {
+          keyboardState = KeyboardState.CAPSLOCK;
+        });
+      } else if (keyboardState == KeyboardState.CAPSLOCK) {
+        setState(() {
+          keyboardState = KeyboardState.DEFAULT;
+        });
+      }
     }
   }
 
-  void toggleSymbol(int keyCode, bool shift) {
-    if (keyboardState == KeyboardState.SYMBOLS) {
-      setState(() {
-        keyboardState = KeyboardState.DEFAULT;
-      });
-    } else {
-      setState(() {
-        symbolPage = 0;
-        keyboardState = KeyboardState.SYMBOLS;
-      });
+  void toggleSymbol(int keyCode, bool shift, bool canceled) {
+    if (!canceled) {
+      if (keyboardState == KeyboardState.SYMBOLS) {
+        setState(() {
+          keyboardState = KeyboardState.DEFAULT;
+        });
+      } else {
+        setState(() {
+          symbolPage = 0;
+          keyboardState = KeyboardState.SYMBOLS;
+        });
+      }
     }
   }
 
