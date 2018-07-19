@@ -1,7 +1,6 @@
 library pseudo_keyboard;
 
 import 'package:flutter/material.dart';
-import 'package:pseudo_keyboard/widgets/custom_ink_well.dart';
 
 enum KeyboardState { DEFAULT, SHIFT, CAPSLOCK, SYMBOLS }
 
@@ -24,69 +23,43 @@ class KeyboardKeyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ButtonThemeData buttonTheme = ButtonTheme.of(context);
     return new Expanded(
-        flex: flex,
-        child: Container(
-            margin: EdgeInsets.all(1.0),
-            child: Semantics(
-              container: true,
-              button: true,
-              enabled: true,
-              child: ConstrainedBox(
-                constraints: buttonTheme.constraints,
-                child: Material(
-                  shape: buttonTheme.shape,
-                  elevation: 2.0,
-                  color: Color.fromARGB(255, 238, 238, 238),
-                  type: MaterialType.button,
-                  animationDuration: kThemeChangeDuration,
-                  child: InkWell(
-                    onTap: () => this.onPressedUp(),
-                    onTapDown: (detail) => this.onPressedDown(),
-                    onTapCancel: () => this.onPressCancel(),
-                    // onLongPress: () => this.onLongPress(),
-                    child: IconTheme.merge(
-                        data: iconTheme,
-                        child: Container(
-                          padding: keyboardKeypadding,
-                          child: Center(
-                            widthFactor: 1.0,
-                            heightFactor: 1.0,
-                            child: icon == null ? Text(text) : icon,
-                          ),
-                        )),
-                  ),
+      flex: flex,
+      child: Container(
+        margin: EdgeInsets.all(1.0),
+        child: Semantics(
+          container: true,
+          button: true,
+          enabled: true,
+          child: ConstrainedBox(
+            constraints: buttonTheme.constraints,
+            child: Material(
+              shape: buttonTheme.shape,
+              elevation: 2.0,
+              color: Color.fromARGB(255, 238, 238, 238),
+              type: MaterialType.button,
+              animationDuration: kThemeChangeDuration,
+              child: InkWell(
+                onTap: () => this.onPressedUp(),
+                onTapDown: (detail) => this.onPressedDown(),
+                onTapCancel: () => this.onPressCancel(),
+                // onLongPress: () => this.onLongPress(),
+                child: IconTheme.merge(
+                  data: iconTheme,
+                  child: Container(
+                    padding: keyboardKeypadding,
+                    child: Center(
+                      widthFactor: 1.0,
+                      heightFactor: 1.0,
+                      child: icon == null ? Text(text) : icon,
+                    ),
+                  )
                 ),
               ),
-            )));
-
-    // if (icon != null) {
-    //   return new Expanded(
-    //     flex: flex,
-    //     child: new Container(
-    //       margin: EdgeInsets.all(1.0),
-    //       child: new IconButton(
-    //         color: Color.fromARGB(255, 238, 238, 238),
-    //         icon: icon,
-    //         padding: new EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
-    //         onPressed: () => this.onKeyUp(keyCode, shift),
-    //       ),
-    //     ),
-    //   );
-    // } else {
-    //   RawMaterialButton();
-    //   return new Expanded(
-    //     child: new Container(
-    //       child: new MaterialButton(
-    //         color: Color.fromARGB(255, 238, 238, 238),
-    //         child: new Text(text),
-    //         padding: new EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
-    //         onPressed: () => this.onPressed(keyCode, shift),
-    //       ),
-    //       margin: EdgeInsets.all(1.0),
-    //     ),
-    //     flex: flex,
-    //   );
-    // }
+            ),
+          ),
+        )
+      )
+    );
   }
 
   void onPressedDown() {
@@ -118,8 +91,6 @@ class KeyboardWidget extends StatefulWidget {
 class _KeyboardState extends State<KeyboardWidget> {
   KeyboardState keyboardState;
   int symbolPage = 0;
-  // final Function(int keyCode, bool isShift) onPress;
-  // final Function(int keyCode, bool isShift) onPressDown;
 
   _KeyboardState({this.keyboardState});
 
@@ -194,8 +165,8 @@ class _KeyboardState extends State<KeyboardWidget> {
               new KeyboardKeyWidget(text: "c", keyCode: 31, onKeyUp: keyPress, onKeyDown: onKeyPressDown),
               new KeyboardKeyWidget(text: "v", keyCode: 50, onKeyUp: keyPress, onKeyDown: onKeyPressDown),
               new KeyboardKeyWidget(text: "b", keyCode: 30, onKeyUp: keyPress, onKeyDown: onKeyPressDown),
-              new KeyboardKeyWidget(text: "m", keyCode: 41, onKeyUp: keyPress, onKeyDown: onKeyPressDown),
               new KeyboardKeyWidget(text: "n", keyCode: 42, onKeyUp: keyPress, onKeyDown: onKeyPressDown),
+              new KeyboardKeyWidget(text: "m", keyCode: 41, onKeyUp: keyPress, onKeyDown: onKeyPressDown),
               new KeyboardKeyWidget(text: "back", keyCode: 67, onKeyUp: keyPress, onKeyDown: onKeyPressDown, flex: 2),
             ],
           ),
@@ -261,15 +232,14 @@ class _KeyboardState extends State<KeyboardWidget> {
           ),
           new Row(
             children: <Widget>[
-              new KeyboardKeyWidget(
-                  text: (keyboardState == KeyboardState.CAPSLOCK ? "SH" : "Sh"), keyCode: 59, onKeyUp: shiftPress, onKeyDown: (_, ignored) {}, flex: 2),
+              new KeyboardKeyWidget(text: (keyboardState == KeyboardState.CAPSLOCK ? "SH" : "Sh"), keyCode: 59, onKeyUp: shiftPress, onKeyDown: (_, ignored) {}, flex: 2),
               new KeyboardKeyWidget(text: "Z", keyCode: 54, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
               new KeyboardKeyWidget(text: "X", keyCode: 52, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
               new KeyboardKeyWidget(text: "C", keyCode: 31, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
               new KeyboardKeyWidget(text: "V", keyCode: 50, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
               new KeyboardKeyWidget(text: "B", keyCode: 30, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
-              new KeyboardKeyWidget(text: "N", keyCode: 41, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
-              new KeyboardKeyWidget(text: "M", keyCode: 42, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
+              new KeyboardKeyWidget(text: "N", keyCode: 42, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
+              new KeyboardKeyWidget(text: "M", keyCode: 41, onKeyUp: keyPress, onKeyDown: onKeyPressDown, shift: true),
               new KeyboardKeyWidget(text: "back", keyCode: 67, onKeyUp: keyPress, onKeyDown: onKeyPressDown, flex: 2),
             ],
           ),
