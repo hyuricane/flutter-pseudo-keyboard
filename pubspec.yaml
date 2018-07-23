@@ -1,8 +1,8 @@
 name: pseudo_keyboard
 description: widget to simulate keyboard UI. not a real keyboard.
 version: 1.0.0
-author:
-homepage:
+author: Yuri Andri Gani <hyuricane@gmail.com>
+homepage: http://inovasiriset.co.id/
 
 dependencies:
   flutter:
@@ -48,3 +48,5 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.io/custom-fonts/#from-packages
+environment:
+    sdk: ">=1.19.0 <2.0.0"
