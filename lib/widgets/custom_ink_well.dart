@@ -6,8 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
-
-
 class CustomInkResponse extends StatefulWidget {
   /// Creates an area of a [Material] that responds to touch.
   ///
@@ -33,11 +31,11 @@ class CustomInkResponse extends StatefulWidget {
     this.splashFactory,
     this.enableFeedback: true,
     this.excludeFromSemantics: false,
-  }) : assert(containedInkWell != null),
-       assert(highlightShape != null),
-       assert(enableFeedback != null),
-       assert(excludeFromSemantics != null),
-       super(key: key);
+  })  : assert(containedInkWell != null),
+        assert(highlightShape != null),
+        assert(enableFeedback != null),
+        assert(excludeFromSemantics != null),
+        super(key: key);
 
   /// The widget below this widget in the tree.
   ///
@@ -197,24 +195,23 @@ class CustomInkResponse extends StatefulWidget {
   }
 
   @override
-  _InkResponseState<CustomInkResponse> createState() => new _InkResponseState<CustomInkResponse>();
+  _InkResponseState<CustomInkResponse> createState() =>
+      new _InkResponseState<CustomInkResponse>();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     final List<String> gestures = <String>[];
-    if (onTap != null)
-      gestures.add('tap');
-    if (onDoubleTap != null)
-      gestures.add('double tap');
-    if (onLongPress != null)
-      gestures.add('long press');
-    if (onTapDown != null)
-      gestures.add('tap down');
-    if (onTapCancel != null)
-      gestures.add('tap cancel');
-    properties.add(new IterableProperty<String>('gestures', gestures, ifEmpty: '<none>'));
-    properties.add(new DiagnosticsProperty<bool>('containedInkWell', containedInkWell, level: DiagnosticLevel.fine));
+    if (onTap != null) gestures.add('tap');
+    if (onDoubleTap != null) gestures.add('double tap');
+    if (onLongPress != null) gestures.add('long press');
+    if (onTapDown != null) gestures.add('tap down');
+    if (onTapCancel != null) gestures.add('tap cancel');
+    properties.add(
+        new IterableProperty<String>('gestures', gestures, ifEmpty: '<none>'));
+    properties.add(new DiagnosticsProperty<bool>(
+        'containedInkWell', containedInkWell,
+        level: DiagnosticLevel.fine));
     properties.add(new DiagnosticsProperty<BoxShape>(
       'highlightShape',
       highlightShape,
@@ -224,17 +221,18 @@ class CustomInkResponse extends StatefulWidget {
   }
 }
 
-class _InkResponseState<T extends CustomInkResponse> extends State<T> with AutomaticKeepAliveClientMixin {
+class _InkResponseState<T extends CustomInkResponse> extends State<T>
+    with AutomaticKeepAliveClientMixin {
   Set<InteractiveInkFeature> _splashes;
   InteractiveInkFeature _currentSplash;
   InkHighlight _lastHighlight;
 
   @override
-  bool get wantKeepAlive => _lastHighlight != null || (_splashes != null && _splashes.isNotEmpty);
+  bool get wantKeepAlive =>
+      _lastHighlight != null || (_splashes != null && _splashes.isNotEmpty);
 
   void updateHighlight(bool value) {
-    if (value == (_lastHighlight != null && _lastHighlight.active))
-      return;
+    if (value == (_lastHighlight != null && _lastHighlight.active)) return;
     if (value) {
       if (_lastHighlight == null) {
         final RenderBox referenceBox = context.findRenderObject();
@@ -255,8 +253,7 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
       _lastHighlight.deactivate();
     }
     assert(value == (_lastHighlight != null && _lastHighlight.active));
-    if (widget.onHighlightChanged != null)
-      widget.onHighlightChanged(value);
+    if (widget.onHighlightChanged != null) widget.onHighlightChanged(value);
   }
 
   void _handleInkHighlightRemoval() {
@@ -270,7 +267,8 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
     final RenderBox referenceBox = context.findRenderObject();
     final Offset position = referenceBox.globalToLocal(details.globalPosition);
     final Color color = widget.splashColor ?? Theme.of(context).splashColor;
-    final RectCallback rectCallback = widget.containedInkWell ? widget.getRectCallback(referenceBox) : null;
+    final RectCallback rectCallback =
+        widget.containedInkWell ? widget.getRectCallback(referenceBox) : null;
     final BorderRadius borderRadius = widget.borderRadius;
 
     InteractiveInkFeature splash;
@@ -278,8 +276,7 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
       if (_splashes != null) {
         assert(_splashes.contains(splash));
         _splashes.remove(splash);
-        if (_currentSplash == splash)
-          _currentSplash = null;
+        if (_currentSplash == splash) _currentSplash = null;
         updateKeepAlive();
       } // else we're probably in deactivate()
     }
@@ -317,8 +314,7 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
     _currentSplash = null;
     updateHighlight(false);
     if (widget.onTap != null) {
-      if (widget.enableFeedback)
-        Feedback.forTap(context);
+      if (widget.enableFeedback) Feedback.forTap(context);
       widget.onTap();
     }
   }
@@ -335,16 +331,14 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
   void _handleDoubleTap() {
     _currentSplash?.confirm();
     _currentSplash = null;
-    if (widget.onDoubleTap != null)
-      widget.onDoubleTap();
+    if (widget.onDoubleTap != null) widget.onDoubleTap();
   }
 
   void _handleLongPress(BuildContext context) {
     _currentSplash?.confirm();
     _currentSplash = null;
     if (widget.onLongPress != null) {
-      if (widget.enableFeedback)
-        Feedback.forLongPress(context);
+      if (widget.enableFeedback) Feedback.forLongPress(context);
       widget.onLongPress();
     }
   }
@@ -354,8 +348,7 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
     if (_splashes != null) {
       final Set<InteractiveInkFeature> splashes = _splashes;
       _splashes = null;
-      for (InteractiveInkFeature splash in splashes)
-        splash.dispose();
+      for (InteractiveInkFeature splash in splashes) splash.dispose();
       _currentSplash = null;
     }
     assert(_currentSplash == null);
@@ -371,14 +364,17 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
     final ThemeData themeData = Theme.of(context);
     _lastHighlight?.color = widget.highlightColor ?? themeData.highlightColor;
     _currentSplash?.color = widget.splashColor ?? themeData.splashColor;
-    final bool enabled = widget.onTap != null || widget.onDoubleTap != null || widget.onLongPress != null;
+    final bool enabled = widget.onTap != null ||
+        widget.onDoubleTap != null ||
+        widget.onLongPress != null;
     return new GestureDetector(
       onTap: enabled ? () => _handleTap(context) : null,
       onTapDown: enabled ? _handleTapDown : null,
       // onTapUp: enabled ? (_) => _handleTap(context) : null,
       onTapCancel: enabled ? _handleTapCancel : null,
       onDoubleTap: widget.onDoubleTap != null ? _handleDoubleTap : null,
-      onLongPress: widget.onLongPress != null ? () => _handleLongPress(context) : null,
+      onLongPress:
+          widget.onLongPress != null ? () => _handleLongPress(context) : null,
       // onHorizontalDragEnd: enabled ? (_) => _handleTap(context) : null,
       // onVerticalDragEnd: enabled ? (_) => _handleTap(context) : null,
       behavior: HitTestBehavior.opaque,
@@ -386,9 +382,7 @@ class _InkResponseState<T extends CustomInkResponse> extends State<T> with Autom
       excludeFromSemantics: widget.excludeFromSemantics,
     );
   }
-
 }
-
 
 class CustomInkWell extends CustomInkResponse {
   /// Creates an ink well.
@@ -414,22 +408,22 @@ class CustomInkWell extends CustomInkResponse {
     bool enableFeedback: true,
     bool excludeFromSemantics: false,
   }) : super(
-    key: key,
-    child: child,
-    onTap: onTap,
-    onDoubleTap: onDoubleTap,
-    onLongPress: onLongPress,
-    onTapDown: onTapDown,
-    onTapCancel: onTapCancel,
-    onHighlightChanged: onHighlightChanged,
-    containedInkWell: true,
-    highlightShape: BoxShape.rectangle,
-    highlightColor: highlightColor,
-    splashColor: splashColor,
-    splashFactory: splashFactory,
-    radius: radius,
-    borderRadius: borderRadius,
-    enableFeedback: enableFeedback,
-    excludeFromSemantics: excludeFromSemantics,
-  );
+          key: key,
+          child: child,
+          onTap: onTap,
+          onDoubleTap: onDoubleTap,
+          onLongPress: onLongPress,
+          onTapDown: onTapDown,
+          onTapCancel: onTapCancel,
+          onHighlightChanged: onHighlightChanged,
+          containedInkWell: true,
+          highlightShape: BoxShape.rectangle,
+          highlightColor: highlightColor,
+          splashColor: splashColor,
+          splashFactory: splashFactory,
+          radius: radius,
+          borderRadius: borderRadius,
+          enableFeedback: enableFeedback,
+          excludeFromSemantics: excludeFromSemantics,
+        );
 }
