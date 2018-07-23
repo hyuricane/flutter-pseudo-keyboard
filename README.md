@@ -9,8 +9,8 @@ Widget to simulate keyboard UI in flutter
 to include in flutter yaml
 
 ```
-  pseudo_keyboard:
-    git: git://github.com/hyuricane/flutter-pseudo-keyboard.git
+  dependencies:
+    pseudo_keyboard: ^1.0.0
 ```
 
 sample in code: 
