@@ -797,13 +797,13 @@ class _KeyboardState extends State<KeyboardWidget> {
                   keyCode: 75,
                   onKeyUp: keyPress,
                   onKeyDown: onKeyPressDown,
-                  shift: true),
+                  shift: false),
               new KeyboardKeyWidget(
                   text: "\"",
                   keyCode: 75,
                   onKeyUp: keyPress,
                   onKeyDown: onKeyPressDown,
-                  shift: false),
+                  shift: true),
               new KeyboardKeyWidget(
                   text: ":",
                   keyCode: 74,
