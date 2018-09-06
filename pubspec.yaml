@@ -1,6 +1,6 @@
 name: pseudo_keyboard
 description: A Flutter widget to simulate keyboard UI. This is not not a real keyboard. You can listen to key up and key down event with keycode and shift state as parameter
-version: 1.0.2
+version: 1.0.3
 author: Yuri Andri Gani <hyuricane@gmail.com>
 homepage: http://inovasiriset.co.id/
 
@@ -49,4 +49,4 @@ flutter:
   # For details regarding fonts in packages, see
   # https://flutter.io/custom-fonts/#from-packages
 environment:
-    sdk: ">=1.19.0 <2.0.0"
+    sdk: ">=2.0.0 <3.0.0"
